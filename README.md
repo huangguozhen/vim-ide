@@ -25,12 +25,14 @@ vim 的各插件打包文档中通常也包含上述两个（甚至更多）子�
 
 <h3>安装vim-plug</h3>
 [下载 plug.vim](https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim) 并拷贝至 ~/.vim/autoload 中
+
+### 配置
 ```
 sh
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ```
-### 使用方法
+### 使用
 在你的.vimrc中增加vim-plug配置
 1. 以 `plug#begin()` 开头
 2. 使用 `Plug` 命令列出需要安装的插件
@@ -46,19 +48,60 @@ Plug 'junegunn/seoul256.vim'
 
 call plug#end()
 ```
+保存.vimrc，重启vim,在命令模式下输入PlugInstall安装插件, 详细使用参考[vim-plup](https://github.com/junegunn/vim-plug.git)。
 
 <h2>利用插件配置相关功能</h2>
 
-###vim 外观配置
+<h3>vim 外观配置</h3>
 使用seoul256.vim插件，现在最流行的还有molokai,solarized等。 在 ~/.vimrc 中增加
 
+### 配置
 ```vim
 " vim-plug中管理起来 
 Plug 'junegunn/seoul256.vim'
  
-" 配置seoul256
+" 配置主题色调
 let g:seoul256_background = 236
 colo seoul256
 ```
 
-###vim 工程管理 
+### 使用
+无
+
+<h3>vim 工程管理</h3> 
+使用nerdtree, tagbar, minibufexpl分别做文件树浏览，标签导航，窗口分割Tab。
+
+### 配置
+```vim
+" 插件引入
+Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
+Plug 'majutsushi/tagbar'
+Plug 'fholgado/minibufexpl.vim'
+
+" 浏览工程文件
+nmap <Leader>nt :NERDTreeToggle<CR>                                            
+let NERDTreeWinSize=24
+let NERDTreeWinPos="left"
+let NERDTreeShowHidden=1
+let NERDTreeMinimalUI=1
+let NERDTreeAutoDeleteBuffer=1
+
+" 标签索引 
+let tagbar_left=0  
+nnoremap <Leader>tl :TagbarToggle<CR>
+let tagbar_width=32 
+let g:tagbar_compact=1 
+let g:tagbar_type_css = {
+\ 'ctagstype' : 'Css',
+    \ 'kinds'     : [
+        \ 'c:classes',
+        \ 's:selectors',
+        \ 'i:identities'
+    \ ]
+\ }
+
+" 文件Tab页配置
+map <Leader>bl :MBEToggle<CR>
+map <Leader>bn :MBEbn<CR>
+map <Leader>bp :MBEbp<CR>
+```

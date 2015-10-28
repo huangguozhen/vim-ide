@@ -100,6 +100,9 @@ Plug 'junegunn/seoul256.vim'
 " 表格模式插件.
 Plug 'dhruvasagar/vim-table-mode'
 
+" 前端开发插件
+Plug 'mattn/emmet-vim'
+
 call plug#end()
 
 " vim plugin 配置 
@@ -111,6 +114,25 @@ let NERDTreeWinPos="left"
 let NERDTreeShowHidden=1
 let NERDTreeMinimalUI=1
 let NERDTreeAutoDeleteBuffer=1
+
+" 标签索引 
+let tagbar_left=0  
+nnoremap <Leader>tl :TagbarToggle<CR>
+let tagbar_width=32 
+let g:tagbar_compact=1 
+let g:tagbar_type_css = {
+\ 'ctagstype' : 'Css',
+    \ 'kinds'     : [
+        \ 'c:classes',
+        \ 's:selectors',
+        \ 'i:identities'
+    \ ]
+\ }
+
+" 文件Tab页配置
+map <Leader>bl :MBEToggle<CR>
+map <Leader>bn :MBEbn<CR>
+map <Leader>bp :MBEbp<CR>
 
 " 主题配置
 " Unified color scheme (default: dark)
@@ -139,22 +161,3 @@ nmap <Leader>tm :TableModeToggle<CR>
 let g:table_mode_corner="|"
 let g:table_mode_corner_corner="+"
 let g:table_mode_header_fillchar="="
-
-" 标签索引 
-let tagbar_left=0  
-nnoremap <Leader>tl :TagbarToggle<CR>
-let tagbar_width=32 
-let g:tagbar_compact=1 
-let g:tagbar_type_css = {
-\ 'ctagstype' : 'Css',
-    \ 'kinds'     : [
-        \ 'c:classes',
-        \ 's:selectors',
-        \ 'i:identities'
-    \ ]
-\ }
-
-" 文件Tab页配置
-map <Leader>bl :MBEToggle<CR>
-map <Leader>bn :MBEbn<CR>
-map <Leader>bp :MBEbp<CR>

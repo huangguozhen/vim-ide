@@ -12,6 +12,7 @@ vim的配置文件是.vimrc。位置存放有以下两个地方(对于Uninx系�
 ```
 "$HOME/.vimrc"	    
 "$HOME/.vim/vimrc"	
+```
 
 vim窗口外观，显示字体，操作方式，快捷键，插件属性等都是在.vimrc文件中配置。基础配置详细参考.vimrc中的配置
 

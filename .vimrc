@@ -5,6 +5,17 @@
 " }}}
 
 
+" 兼容性 {{{
+    set nocompatible
+"
+"   解决 Arrow Key Bug {{{
+        if &term[:4] == 'xterm' || &term[:5] == 'screen' || &term[:3] == 'rxvt'
+            inoremap <silent> <C-[>OC <RIGHT>
+        endif
+"   }}}
+" }}}
+
+
 " 插件管理 {{{
     "
     call plug#begin('~/.vim/plugged')
@@ -12,8 +23,6 @@
             Plug 'scrooloose/nerdtree'
             Plug 'jistr/vim-nerdtree-tabs'
 
-            Plug 'altercation/vim-colors-solarized'
-            Plug 'spf13/vim-colors'
             Plug 'bling/vim-airline'
             Plug 'powerline/fonts'
             Plug 'flazz/vim-colorschemes'
@@ -41,42 +50,31 @@
             "Plug 'beyondwords/vim-twig'
         "" }}}
 
-        "" Javascript {{{
-            "Plug 'elzr/vim-json'
-            "Plug 'groenewege/vim-less'
-            "Plug 'pangloss/vim-javascript'
-            "Plug 'briancollins/vim-jst'
-            "Plug 'kchmck/vim-coffee-script'
-        "" }}}
+        " Javascript {{{
+            Plug 'elzr/vim-json'
+            Plug 'groenewege/vim-less'
+            Plug 'pangloss/vim-javascript'
+            Plug 'briancollins/vim-jst'
+            Plug 'kchmck/vim-coffee-script'
+        " }}}
 
-        "" Html {{{
-            "Plug 'amirh/HTML-AutoCloseTag'
-            "Plug 'hail2u/vim-css3-syntax'
-            "Plug 'gorodinskiy/vim-coloresque'
-            "Plug 'tpope/vim-haml'
-        "" }}}
+        " Html {{{
+            Plug 'amirh/HTML-AutoCloseTag'
+            Plug 'hail2u/vim-css3-syntax'
+            Plug 'gorodinskiy/vim-coloresque'
+            Plug 'tpope/vim-haml'
+        " }}}
 
         " Snippets & AutoComplete{{{
             "Plug 'Shougo/neocomplete.vim'
-            Plug 'Shougo/neosnippet'
-            Plug 'Shougo/neosnippet-snippets'
+            "Plug 'Shougo/neosnippet'
+            "Plug 'Shougo/neosnippet-snippets'
 
-            Plug 'SirVer/ultisnips'
-            Plug 'honza/vim-snippets'
+            "Plug 'SirVer/ultisnips'
+            "Plug 'honza/vim-snippets'
         " }}}
 
     call plug#end()
-" }}}
-
-
-" 兼容性 {{{
-    set nocompatible
-"
-"   解决 Arrow Key Bug {{{
-        if &term[:4] == 'xterm' || &term[:5] == 'screen' || &term[:3] == 'rxvt'
-            inoremap <silent> <C-[>OC <RIGHT>
-        endif
-"   }}}
 " }}}
 
 
@@ -89,7 +87,7 @@
 
     set shortmess+=filmnrxoOtT          " 精简一些信息显示，详细选项信息输入:help shortmess了解
     set history=1000                    " 保存历史记录行数
-    set spell                           " 拼写检查
+    "set spell                           " 拼写检查
     set hidden                          " 允许不保存切换缓存区 
 
     " 显示git commit 相关信息
@@ -119,7 +117,7 @@
     set splitbelow                      " 默认下面打开分割窗口
     set pastetoggle=<F12>
 
-    " autocmd FileType php,javascript,python,xml,sql autocmd BufWritePre <buffer> call StripTrailingWhitespace()
+    autocmd FileType php,javascript,python,xml,sql autocmd BufWritePre <buffer> call StripTrailingWhitespace()
 
 " }}}
 
@@ -149,7 +147,7 @@
     nnoremap <leader>bp :bp<CR>
 
     " Toggle hlsearch
-    nnoremap <silent> <leader><leader> :set invhlsearch<CR> 
+    nnoremap <silent> <leader><leader>c :set invhlsearch<CR>
 
     " 插件快捷键 {{{
     " }}}
@@ -188,7 +186,7 @@
 
         if isdirectory(expand("~/.vim/plugged/vim-airline/"))
             if !exists('g:airline_theme')
-                let g:airline_theme = 'solarized'
+                let g:airline_theme = 'molokai'
             endif
             if !exists('g_airline_powerline_fonts')
                 let g:airline_left_sep = '›'
@@ -197,13 +195,13 @@
         endif
     " }}}
 
-    " PIV {{{
+    "" PIV {{{
 
-        if isdirectory(expand("~/.vim/plugged/PIV"))
-            let g:DisableAutoPHPFolding = 0
-            let g:PIVAutoClose = 0
-       endif
-    " }}}
+        "if isdirectory(expand("~/.vim/plugged/PIV"))
+            "let g:DisableAutoPHPFolding = 0
+            "let g:PIVAutoClose = 0
+        "endif
+    "" }}}
 
 
     " EasyMotion {{{
@@ -289,116 +287,131 @@
         endif
     " }}}
 
-    " Snippets & AutoComplete {{{
+    " Syntastic {{{
+        set statusline+=%#warningmsg#
+        set statusline+=%{SyntasticStatuslineFlag()}
+        set statusline+=%*
 
-        "Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
-        " Disable AutoComplPop.
-        let g:acp_enableAtStartup = 0
-        " Use neocomplete.
-        let g:neocomplete#enable_at_startup = 0
-        " Use smartcase.
-        let g:neocomplete#enable_smart_case = 1
-        " Set minimum syntax keyword length.
-        let g:neocomplete#sources#syntax#min_keyword_length = 3
-        let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-        " Define dictionary.
-        let g:neocomplete#sources#dictionary#dictionaries = {
-            \ 'default' : '',
-           \ 'vimshell' : $HOME.'/.vimshell_hist',
-            \ 'scheme' : $HOME.'/.gosh_completions'
-                \ }
-
-        " Define keyword.
-        if !exists('g:neocomplete#keyword_patterns')
-            let g:neocomplete#keyword_patterns = {}
-        endif
-        let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-        " Plugin key-mappings.
-        inoremap <expr><C-g>     neocomplete#undo_completion()
-        inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-        " Recommended key-mappings.
-        " <CR>: close popup and save indent.
-        inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-        function! s:my_cr_function()
-          return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-          " For no inserting <CR> key.
-          "return pumvisible() ? "\<C-y>" : "\<CR>"
-        endfunction
-        " <TAB>: completion.
-        inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-        " <C-h>, <BS>: close popup and delete backword char.
-        inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-        inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-        " Close popup by <Space>.
-        "inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-
-        " AutoComplPop like behavior.
-        let g:neocomplete#enable_auto_select = 1
-
-        " Shell like behavior(not recommended).
-        "set completeopt+=longest
-        "let g:neocomplete#enable_auto_select = 1
-        "let g:neocomplete#disable_auto_complete = 1
-        "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-        " Enable omni completion.
-        autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-        autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-        autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-        autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-        autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-        " Enable heavy omni completion.
-        if !exists('g:neocomplete#sources#omni#input_patterns')
-          let g:neocomplete#sources#omni#input_patterns = {}
-        endif
-        "let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-        "let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-        "let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-        " For perlomni.vim setting.
-        " https://github.com/c9s/perlomni.vim
-        let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-
-        " Plugin key-mappings.
-        imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-        smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-        xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-        " SuperTab like snippets behavior.
-        " imap <expr><TAB>
-        "  \ pumvisible() ? "\<C-n>" :
-        "  \ neosnippet#expandable_or_jumpable() ?
-        "  \    "\<TAB>" : "\<Plug>(neosnippet_expand_or_jump 
-
-        smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-        \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-        " For conceal markers.
-        if has('conceal')
-            set conceallevel=2 concealcursor=niv
-        endif
-
-        " Enable snipMate compatibility feature.
-        let g:neosnippet#enable_snipmate_compatibility = 1
-
-        " Tell Neosnippet about the other snippets
-        let g:neosnippet#snippets_directory='~/.vim/plugged/vim-snippets/snippets'
+        let g:syntastic_always_populate_loc_list = 1
+        let g:syntastic_auto_loc_list = 1
+        let g:syntastic_check_on_open = 1
+        let g:syntastic_check_on_wq = 0
     " }}}
+
+    "" Snippets & AutoComplete {{{
+
+        "" Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
+        "" Disable AutoComplPop.
+        "let g:acp_enableAtStartup = 0
+        "" Use neocomplete.
+        "let g:neocomplete#enable_at_startup = 0
+        "" Use smartcase.
+        "let g:neocomplete#enable_smart_case = 1
+        "" Set minimum syntax keyword length.
+        "let g:neocomplete#sources#syntax#min_keyword_length = 3
+        "let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+
+        "" Define dictionary.
+        "let g:neocomplete#sources#dictionary#dictionaries = {
+            "\ 'default' : '',
+           "\ 'vimshell' : $HOME.'/.vimshell_hist',
+            "\ 'scheme' : $HOME.'/.gosh_completions'
+                "\ }
+
+        "" Define keyword.
+        "if !exists('g:neocomplete#keyword_patterns')
+            "let g:neocomplete#keyword_patterns = {}
+        "endif
+        "let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+        "" Plugin key-mappings.
+        "inoremap <expr><C-g>     neocomplete#undo_completion()
+        "inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+        "" Recommended key-mappings.
+        "" <CR>: close popup and save indent.
+        "inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+        "function! s:my_cr_function()
+          "return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+          "" For no inserting <CR> key.
+          ""return pumvisible() ? "\<C-y>" : "\<CR>"
+        "endfunction
+        "" <TAB>: completion.
+        "inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+        "" <C-h>, <BS>: close popup and delete backword char.
+        "inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+        "inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+        "" Close popup by <Space>.
+        ""inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
+
+        "" AutoComplPop like behavior.
+        "let g:neocomplete#enable_auto_select = 1
+
+        "" Shell like behavior(not recommended).
+        ""set completeopt+=longest
+        ""let g:neocomplete#enable_auto_select = 1
+        ""let g:neocomplete#disable_auto_complete = 1
+        ""inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+        "" Enable omni completion.
+        "autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+        "autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+        "autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+        "autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+        "autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+        "" Enable heavy omni completion.
+        "if !exists('g:neocomplete#sources#omni#input_patterns')
+          "let g:neocomplete#sources#omni#input_patterns = {}
+        "endif
+        ""let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+        ""let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+        ""let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+        "" For perlomni.vim setting.
+        "" https://github.com/c9s/perlomni.vim
+        "let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
+
+        "" Plugin key-mappings.
+        "imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+        "smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+        "xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+        "" SuperTab like snippets behavior.
+        "" imap <expr><TAB>
+        ""  \ pumvisible() ? "\<C-n>" :
+        ""  \ neosnippet#expandable_or_jumpable() ?
+        ""  \    "\<TAB>" : "\<Plug>(neosnippet_expand_or_jump 
+
+        "smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+        "\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+        "" For conceal markers.
+        "if has('conceal')
+            "set conceallevel=2 concealcursor=niv
+        "endif
+
+        "" Enable snipMate compatibility feature.
+        "let g:neosnippet#enable_snipmate_compatibility = 1
+
+        "" Tell Neosnippet about the other snippets
+        "let g:neosnippet#snippets_directory='~/.vim/plugged/vim-snippets/snippets'
+    "" }}}
 " }}}
 
 
 " Vim 界面设置 {{{
 
-    if filereadable(expand("~/.vim/plugged/vim-colors-solarized/colors/solarized.vim"))
+    if has('gui_running')
         let g:solarized_termcolors=256
         let g:solarized_termtrans=1
         let g:solarized_contrast="normal"
         let g:solarized_visibility="normal"
-        color solarized
+        colorscheme solarized
+    else
+        colorscheme molokai
+        let g:molokai_original = 1
+        let g:rehash256 = 1
     endif
 
     set tabpagemax=15                   " 最大显示15个tab页
@@ -416,12 +429,12 @@
     endif
 
     if has('statusline')
-        set laststatus=2 
+        set laststatus=2
         set statusline=%<%f\            " 文件名
         set statusline+=%w%h%m%r        " 选项
 
         " 显示git信息
-        " set statusline+=%{fugitive#statusline()}
+        set statusline+=%{fugitive#statusline()}
 
         set statusline+=\ [%{&ff}/%Y]   " 文件类型
         set statusline+=\ [%{getcwd()}] " 当前目录
@@ -449,9 +462,12 @@
 
     " GUI 设置 {{{
         if has('gui_running')
-            set guioptions -= T
-            set lines = 40
-            set guifont = Andale\ Mono\ Regular\ 12,Menlo\ Regular\ 11,Consolas\ Regular\ 12,Courier\ New\ Regular\ 14
+            set guioptions+=c
+            set guioptions-=m
+            set guioptions-=L
+            set guioptions-=b
+            set lines=40
+            set guifont=Andale\ Mono\ Regular\ 12,Menlo\ Regular\ 11,Consolas\ Regular\ 12,Courier\ New\ Regular\ 14
         else
             if &term == 'xterm' || &term == 'screen'
                 set t_Co=256
@@ -463,7 +479,7 @@
 
 " 自定义函数 {{{
 
-    " 初始化NERDTree插件 {{{
+   " 初始化NERDTree插件 {{{
 
         function! NERDTreeInitAsNeeded()
             redir => bufoutput

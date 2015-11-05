@@ -4,7 +4,7 @@ huangguozhen@outlook.com
 ##【前言】
 ----
 
-公欲善其事，必先利其器。一款让自己赏心悦目的IDE能让自己更高效的Coding。
+工欲善其事，必先利其器。一款让自己赏心悦目的IDE能让自己更高效的Coding。
  ![image](https://github.com/huangguozhen/vim-ide/blob/master/img/vim.png)
 
 ## 【正文】

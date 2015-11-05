@@ -5,12 +5,13 @@ huangguozhen@outlook.com
 ----
 
 公欲善其事，必先利其器。一款让自己赏心悦目的IDE能让自己更高效的Coding。
+ ![image](https://github.com/huangguozhen/vim-ide/blob/master/img/vim.png)
 
 ## 【正文】
 <h2>基础配置</h2>
 vim的配置文件是.vimrc。位置存放有以下两个地方(对于Uninx系统),通常都是放在 $HOME/.vimrc
 ```
-"$HOME/.vimrc"	    
+"$HOME/.vimrc"	
 "$HOME/.vim/vimrc"	
 ```
 

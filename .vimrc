@@ -39,6 +39,7 @@
             Plug 'scrooloose/syntastic'
             Plug 'scrooloose/nerdcommenter'
             Plug 'tpope/vim-fugitive'
+            Plug 'airblade/vim-gitgutter'
             if executable('ctags')
                 Plug 'majutsushi/tagbar'
             endif
@@ -91,7 +92,7 @@
     set hidden                          " 允许不保存切换缓存区 
 
     " 显示git commit 相关信息
-    autocmd FileType gitcommit autocmd! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
+    au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
 
     " 设置目录 {{{
         set backup                      " 备份文件
@@ -117,7 +118,7 @@
     set splitbelow                      " 默认下面打开分割窗口
     set pastetoggle=<F12>
 
-    autocmd FileType php,javascript,python,xml,sql autocmd BufWritePre <buffer> call StripTrailingWhitespace()
+    "autocmd FileType php,javascript,python,xml,sql autocmd BufWritePre <buffer> call StripTrailingWhitespace()
 
 " }}}
 
@@ -148,6 +149,12 @@
 
     " Toggle hlsearch
     nnoremap <silent> <leader><leader>c :set invhlsearch<CR>
+
+    " Find merge conflict markers
+    map <leader>fc /\v^[<\|=>]{7}( .*\|$ )<CR>
+
+    " display all lines with keyword under cursor
+    nmap <Leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>]
 
     " 插件快捷键 {{{
     " }}}
@@ -284,6 +291,15 @@
             " Mnemonic _i_nteractive
             nnoremap <silent> <leader>gi :Git add -p %<CR>
             nnoremap <silent> <leader>gg :SignifyToggle<CR>
+        endif
+    " }}}
+
+    " Gitgutter {{{
+        if isdirectory(expand("~/.vim/plugged/vim-gitgutter/"))
+            nmap <Leader>ha <Plug>GitGutterStageHunk
+            nmap <Leader>hu <Plug>GitGutterRevertHunk
+            nmap <Leader>hv <Plug>GitGutterPreviewHunk
+            noremap <leader>g :GitGutterToggle<CR>
         endif
     " }}}
 

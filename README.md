@@ -53,6 +53,12 @@ call plug#end()
 
 <h2>示例配置</h2>
 ```vim
+" 简介 {{{
+"       M
+"   huangguozhen@outlook.com
+"   工于善其事，必先利其器。
+" }}}
+
 
 " 兼容性 {{{
     set nocompatible
@@ -88,6 +94,7 @@ call plug#end()
             Plug 'scrooloose/syntastic'
             Plug 'scrooloose/nerdcommenter'
             Plug 'tpope/vim-fugitive'
+            Plug 'airblade/vim-gitgutter'
             if executable('ctags')
                 Plug 'majutsushi/tagbar'
             endif
@@ -114,6 +121,11 @@ call plug#end()
             Plug 'tpope/vim-haml'
         " }}}
 
+        " Markdown {{{
+            " shell: [sudo] npm -g install instant-markdown-d
+            Plug 'suan/vim-instant-markdown'
+        " }}}
+
         " Snippets & AutoComplete{{{
             "Plug 'Shougo/neocomplete.vim'
             "Plug 'Shougo/neosnippet'
@@ -137,10 +149,10 @@ call plug#end()
     set shortmess+=filmnrxoOtT          " 精简一些信息显示，详细选项信息输入:help shortmess了解
     set history=1000                    " 保存历史记录行数
     "set spell                           " 拼写检查
-    set hidden                          " 允许不保存切换缓存区 
+    set hidden                          " 允许不保存切换缓存区
 
     " 显示git commit 相关信息
-    autocmd FileType gitcommit autocmd! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
+    au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
 
     " 设置目录 {{{
         set backup                      " 备份文件
@@ -151,7 +163,14 @@ call plug#end()
             set undolevels=100
             set undoreload=10000
         endif
+
+        set backupdir=~/.vim/backups
+        set directory=~/.vim/swaps
+        if exists("&undodir")
+            set undodir=~/.vim/undo
+        endif
     " }}}
+
 " }}}
 
 
@@ -166,7 +185,7 @@ call plug#end()
     set splitbelow                      " 默认下面打开分割窗口
     set pastetoggle=<F12>
 
-    autocmd FileType php,javascript,python,xml,sql autocmd BufWritePre <buffer> call StripTrailingWhitespace()
+    autocmd FileType php,javascript,python,xml,sql autocmd BufWritePre <buffer> call StripWhitespace()
 
 " }}}
 
@@ -197,6 +216,14 @@ call plug#end()
 
     " Toggle hlsearch
     nnoremap <silent> <leader><leader>c :set invhlsearch<CR>
+
+    " Find merge conflict markers
+    map <leader>fc /\v^[<\|=>]{7}( .*\|$ )<CR>
+
+    " display all lines with keyword under cursor
+    nmap <Leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>]
+
+    noremap <leader>ss :call StripWhitespace()<CR>
 
     " 插件快捷键 {{{
     " }}}
@@ -336,6 +363,12 @@ call plug#end()
         endif
     " }}}
 
+    " Gitgutter {{{
+        if isdirectory(expand("~/.vim/plugged/vim-gitgutter/"))
+            noremap <leader>g :GitGutterToggle<CR>
+        endif
+    " }}}
+
     " Syntastic {{{
         set statusline+=%#warningmsg#
         set statusline+=%{SyntasticStatuslineFlag()}
@@ -346,7 +379,10 @@ call plug#end()
         let g:syntastic_check_on_open = 1
         let g:syntastic_check_on_wq = 0
     " }}}
-" }}}
+
+    " Vim instant markdown {{{
+        let g:instant_markdown_slow = 1
+    " }}}
 
 
 " Vim 界面设置 {{{
@@ -407,7 +443,7 @@ call plug#end()
     set scrolloff=3
     set foldenable
     set list
-    set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " 高亮显示有问题的空白
+    set listchars=tab:▸\ ,trail:•,extends:#,nbsp:. " 高亮显示有问题的空白
 
     " GUI 设置 {{{
         if has('gui_running')
@@ -445,13 +481,12 @@ call plug#end()
 
     " StripTrailingWhitespace {{{
 
-        function! StripTrailingWhitespace()
-            let _s=@/
-            let l = line(".")
-            let c = col(".")
-            %s/\s\+$//e
-            let #/=_s
-            call cursor(l, c)
+        function! StripWhitespace ()
+            let save_cursor = getpos(".")
+            let old_query = getreg('/')
+            :%s/\s\+$//e
+            call setpos('.', save_cursor)
+            call setreg('/', old_query)
         endfunction
     " }}}
 

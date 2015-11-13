@@ -66,6 +66,11 @@
             Plug 'tpope/vim-haml'
         " }}}
 
+        " Markdown {{{
+            " shell: [sudo] npm -g install instant-markdown-d
+            Plug 'suan/vim-instant-markdown'
+        " }}}
+
         " Snippets & AutoComplete{{{
             "Plug 'Shougo/neocomplete.vim'
             "Plug 'Shougo/neosnippet'
@@ -89,7 +94,7 @@
     set shortmess+=filmnrxoOtT          " 精简一些信息显示，详细选项信息输入:help shortmess了解
     set history=1000                    " 保存历史记录行数
     "set spell                           " 拼写检查
-    set hidden                          " 允许不保存切换缓存区 
+    set hidden                          " 允许不保存切换缓存区
 
     " 显示git commit 相关信息
     au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
@@ -103,7 +108,14 @@
             set undolevels=100
             set undoreload=10000
         endif
+
+        set backupdir=~/.vim/backups
+        set directory=~/.vim/swaps
+        if exists("&undodir")
+            set undodir=~/.vim/undo
+        endif
     " }}}
+
 " }}}
 
 
@@ -118,7 +130,7 @@
     set splitbelow                      " 默认下面打开分割窗口
     set pastetoggle=<F12>
 
-    "autocmd FileType php,javascript,python,xml,sql autocmd BufWritePre <buffer> call StripTrailingWhitespace()
+    autocmd FileType php,javascript,python,xml,sql autocmd BufWritePre <buffer> call StripWhitespace()
 
 " }}}
 
@@ -155,6 +167,8 @@
 
     " display all lines with keyword under cursor
     nmap <Leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>]
+
+    noremap <leader>ss :call StripWhitespace()<CR>
 
     " 插件快捷键 {{{
     " }}}
@@ -296,9 +310,6 @@
 
     " Gitgutter {{{
         if isdirectory(expand("~/.vim/plugged/vim-gitgutter/"))
-            nmap <Leader>ha <Plug>GitGutterStageHunk
-            nmap <Leader>hu <Plug>GitGutterRevertHunk
-            nmap <Leader>hv <Plug>GitGutterPreviewHunk
             noremap <leader>g :GitGutterToggle<CR>
         endif
     " }}}
@@ -312,6 +323,10 @@
         let g:syntastic_auto_loc_list = 1
         let g:syntastic_check_on_open = 1
         let g:syntastic_check_on_wq = 0
+    " }}}
+
+    " Vim instant markdown {{{
+        let g:instant_markdown_slow = 1
     " }}}
 
     "" Snippets & AutoComplete {{{
@@ -397,7 +412,7 @@
         "" imap <expr><TAB>
         ""  \ pumvisible() ? "\<C-n>" :
         ""  \ neosnippet#expandable_or_jumpable() ?
-        ""  \    "\<TAB>" : "\<Plug>(neosnippet_expand_or_jump 
+        ""  \    "\<TAB>" : "\<Plug>(neosnippet_expand_or_jump
 
         "smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
         "\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
@@ -474,7 +489,7 @@
     set scrolloff=3
     set foldenable
     set list
-    set listchars=tab:›\ ,trail:•,extends:#,nbsp:. " 高亮显示有问题的空白
+    set listchars=tab:▸\ ,trail:•,extends:#,nbsp:. " 高亮显示有问题的空白
 
     " GUI 设置 {{{
         if has('gui_running')
@@ -512,13 +527,12 @@
 
     " StripTrailingWhitespace {{{
 
-        function! StripTrailingWhitespace()
-            let _s=@/
-            let l = line(".")
-            let c = col(".")
-            %s/\s\+$//e
-            let #/=_s
-            call cursor(l, c)
+        function! StripWhitespace ()
+            let save_cursor = getpos(".")
+            let old_query = getreg('/')
+            :%s/\s\+$//e
+            call setpos('.', save_cursor)
+            call setreg('/', old_query)
         endfunction
     " }}}
 
